@@ -1,0 +1,95 @@
+import tkinter as tk
+from tkinter import messagebox
+
+class Producto:
+    def __init__(self, nombre, precio, app):
+        self.nombre = nombre
+        self.precio = precio
+        self.app = app
+        self.cantidad = 0
+
+    def agregar_al_total(self):
+        self.cantidad += 1
+        self.app.total += self.precio
+        self.app.actualizar_total()
+        self.app.actualizar_cantidad(self)
+
+    def eliminar_del_total(self):
+        if self.cantidad > 0:
+            self.cantidad -= 1
+            self.app.total -= self.precio
+            self.app.actualizar_total()
+            self.app.actualizar_cantidad(self)
+        else:
+            messagebox.showwarning("Advertencia", "No puedes eliminar más unidades de este producto.")
+
+class CalculadoraPrecios:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Bienvenido a la Cantina del Cine!!!!!")
+        
+        self.frame = tk.Frame(root)
+        self.frame.pack(padx=20, pady=20)
+
+        self.total = 0.0
+
+        # Crear categorías de productos con nombres y precios predefinidos
+        self.categorias = {
+            "Funciones": [
+                Producto("Producto 1A", 10.99, self),
+                Producto("Producto 1B", 5.49, self),
+                Producto("Producto 1C", 7.99, self),
+            ],
+            "Bebidas": [
+                Producto("Coca-Cola", 12.99, self),
+                Producto("Pepsi", 6.79, self),
+                Producto("Fanta", 9.99, self),
+                Producto("Sprite", 4.50, self)
+            ],
+            "Golocinas": [
+                Producto("Palomitas (G)", 8.49, self),
+                Producto("Kit-Kat", 3.29, self),
+                Producto("Turron", 14.99, self),
+            ],
+            "Combos":[
+                
+            ]
+        }
+
+        self.producto_frames = {}  # Para almacenar los frames de cada producto
+
+        # Crear interfaces para cada categoría de productos
+        for categoria, productos in self.categorias.items():
+            tk.Label(self.frame, text=categoria, font=('Arial', 14, 'bold')).pack(pady=10)
+            
+            for producto in productos:
+                frame_producto = tk.Frame(self.frame)
+                frame_producto.pack(pady=5)
+                self.producto_frames[producto] = frame_producto
+
+                agregar_btn = tk.Button(frame_producto, text=f"Agregar {producto.nombre} - ${producto.precio:.2f}",
+                                        command=producto.agregar_al_total)
+                agregar_btn.pack(side=tk.LEFT, padx=5)
+
+                eliminar_btn = tk.Button(frame_producto, text=f"Eliminar {producto.nombre}",
+                                         command=producto.eliminar_del_total)
+                eliminar_btn.pack(side=tk.LEFT, padx=5)
+
+                cantidad_label = tk.Label(frame_producto, text="Cantidad: 0")
+                cantidad_label.pack(side=tk.LEFT, padx=5)
+                producto.cantidad_label = cantidad_label
+
+        # Etiqueta para mostrar el total
+        self.total_label = tk.Label(self.frame, text="Precio Total: $0.00")
+        self.total_label.pack(pady=20)
+
+    def actualizar_total(self):
+        self.total_label.config(text=f"Precio Total: ${self.total:.2f}")
+
+    def actualizar_cantidad(self, producto):
+        producto.cantidad_label.config(text=f"Cantidad: {producto.cantidad}")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = CalculadoraPrecios(root)
+    root.mainloop()
