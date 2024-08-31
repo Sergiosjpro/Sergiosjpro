@@ -1,0 +1,50 @@
+# #importer
+import tkinter as tk
+from PIL import ImageTk, Image
+from tkinter import messagebox
+ #ventana
+venta=tk.Tk()
+venta.title("ventanda")
+venta.geometry("1000x700")
+venta.configure(bg="purple")
+venta.resizable(True,True)
+
+
+ #funciones
+def agrego(): 
+     for agregas in lista.curselection():
+         lista_tareas.insert(tk.END,f"{lista.get(agregas)}")
+
+def Sumar():
+     suma=0
+     for pas in lista_tareas.get(0,10):
+         if pas=="PAQUETE 1":
+            suma+=10  
+         if pas=="PAQUETE 2":
+            suma+=20
+         if pas=="PAQUETE 3":
+            suma+=30
+         if pas=="PAQUETE 4":
+           suma+=40   
+         if pas=="PAQUETE 5":
+             suma+=50
+     sumatoria_mostrar.config(text=f"{suma}")
+    
+#cajas de entrada
+lista = tk.Listbox(venta)
+for i in range(5):
+     lista.insert(tk.END, f'PAQUETE {i+1}')
+lista.pack()
+lista_tareas = tk.Listbox(venta)
+lista_tareas.pack()
+#botones
+boton_agregar=tk.Button(venta,text="agregar",command=agrego)
+boton_agregar.pack()
+sumatoria=tk.Button(venta,text="suma: ",command=lambda:Sumar())
+sumatoria.pack()
+#etiquetas
+sumatoria_mostrar=tk.Label(venta,text="0") 
+sumatoria_mostrar.pack()
+
+
+venta.mainloop()
